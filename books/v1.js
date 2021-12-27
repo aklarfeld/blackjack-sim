@@ -1,3 +1,5 @@
+// Amazon book strategy
+
 const { ranks } = require('../deck');
 const { actions } = require('../actions');
 // Dealer Upcard is the first key, total max value is the second key
@@ -260,7 +262,128 @@ const softLookup = {
     },
 }
 
-const splitLookup = {}
+const splitLookup = {
+    2: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split,
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.Split, // Split only if double after
+        10: actions.DontSplit,
+        8: actions.DontSplit,
+        6: actions.Split, // Split only if double after
+        4: actions.Split // Split only if double after
+    },
+    3: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split,
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.Split,
+        10: actions.DontSplit,
+        8: actions.DontSplit,
+        6: actions.Split,// Split only if double after
+        4: actions.Split // Split only if double after
+    },
+    4: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split,
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.Split,
+        10: actions.DontSplit,
+        8: actions.DontSplit,
+        6: actions.Split,
+        4: actions.Split
+    },
+    5: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split,
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.Split,
+        10: actions.DontSplit,
+        8: actions.Split, // Split only if double after
+        6: actions.Split,
+        4: actions.Split
+    },
+    6: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split,
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.Split,
+        10: actions.DontSplit,
+        8: actions.Split, // Split only if double after
+        6: actions.Split,
+        4: actions.Split
+    },
+    7: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.DontSplit, // Should actually default to other logic
+        16: actions.Split,
+        14: actions.Split,
+        12: actions.DontSplit,
+        10: actions.DontSplit,
+        8: actions.DontSplit, // Split only if double after
+        6: actions.Split,
+        4: actions.Split
+    },
+    8: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split, // Should actually default to other logic
+        16: actions.Split,
+        14: actions.DontSplit,
+        12: actions.DontSplit,
+        10: actions.DontSplit,
+        8: actions.DontSplit, // Split only if double after
+        6: actions.DontSplit,
+        4: actions.DontSplit
+    },
+    9: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.Split, // Should actually default to other logic
+        16: actions.Split,
+        14: actions.DontSplit,
+        12: actions.DontSplit,
+        10: actions.DontSplit,
+        8: actions.DontSplit, // Split only if double after
+        6: actions.DontSplit,
+        4: actions.DontSplit
+    },
+    10: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.DontSplit, // Should actually default to other logic
+        16: actions.Split,
+        14: actions.DontSplit,
+        12: actions.DontSplit,
+        10: actions.DontSplit,
+        8: actions.DontSplit, // Split only if double after
+        6: actions.DontSplit,
+        4: actions.DontSplit
+    },
+    11: {
+        22: actions.Split,
+        20: actions.DontSplit, // Should actually default to other logic
+        18: actions.DontSplit, // Should actually default to other logic
+        16: actions.Split,
+        14: actions.DontSplit,
+        12: actions.DontSplit,
+        10: actions.DontSplit,
+        8: actions.DontSplit, // Split only if double after
+        6: actions.DontSplit,
+        4: actions.DontSplit
+    },
+}
 // Splits
 
 module.exports = { 

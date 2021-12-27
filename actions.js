@@ -4,6 +4,7 @@ const actions = {
     Double: 'Double',
     Split: 'Split',
     Surrender: 'Surrender',
+    DontSplit: 'DontSplit',
 }
 
 module.exports = { actions };
