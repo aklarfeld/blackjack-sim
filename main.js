@@ -22,16 +22,13 @@ const playShoe = (numDecks, playerStrategy, dealerStrategy) => {
         for(let i=0; i < playerHands.length; i++) {
             runningWin += evaluateHands({ playerHand: playerHands[i], dealerHand: dealerHands[0] });
         }
-        console.log('Dealer Initial', dealerFaceUp);
-        console.log('Player Hand', JSON.stringify(playerHands, null, 2));
-        console.log('Dealer Hand', JSON.stringify(dealerHands, null, 2));
-        console.log({ runningWin })
-        process.exit(0)
-        // runningWin += resultingWin;
-        // runningDecks = deck;
-        // handsPlayed += 1;
+        // console.log('Dealer Initial', dealerFaceUp);
+        // console.log('Player Hand', JSON.stringify(playerHands, null, 2));
+        // console.log('Dealer Hand', JSON.stringify(dealerHands, null, 2));
+        // console.log({ runningWin })
+        handsPlayed += 1;
     }
-    // return { win: runningWin, handsPlayed }
+    return { win: runningWin, handsPlayed }
 };
 
 const playHand = ({ hands = [], dealerFaceUp, strategy, decks }) => {
@@ -43,7 +40,7 @@ const playHand = ({ hands = [], dealerFaceUp, strategy, decks }) => {
         }
     } else {
         hands = [{ hands: [decks.pop(), decks.pop()], bet: 1 }];
-        console.log('Player Initial', hands[0].hands);
+        // console.log('Player Initial', hands[0].hands);
     }
 
     for(let i=0; i<hands.length; i++) {
@@ -105,7 +102,8 @@ const monteCarlo = ({ simulateAmount, numDecks, playerStrategy, dealerStrategy }
     console.log({ runningWin, totalHandsPlayed, simulateAmount, winPerHand: runningWin / totalHandsPlayed })
 }
 
-playShoe(6, bookStrategy, simpleStrategy)
+// console.log(playShoe(6, bookStrategy, simpleStrategy))
+
 // Simulate basic strategy 10k times with 6 decks, where player hits until above 17
-// monteCarlo({ simulateAmount: 10000, numDecks: 6, playerStrategy: simpleStrategy, dealerStrategy: simpleStrategy })
+// monteCarlo({ simulateAmount: 10000, numDecks: 6, playerStrategy: bookStrategy, dealerStrategy: simpleStrategy })
 
