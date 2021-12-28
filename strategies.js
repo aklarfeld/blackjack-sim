@@ -4,11 +4,12 @@ const { ranks } = require('./deck');
 const { getDeck, shuffleDeck } = require('./deck');
 const { getValue } = require('./helper');
 
-// Hit until you see 17, ignore dealer
-// Also can be used for dealer strategy, standing on 17
-// No splits, no doubles
+// Dealer strategy
+// Stand on soft 17
 const simpleStrategy = ({ hands }) => {
-    let playerValue = getValue(hands);
+    const maxPlayerValue = Math.max(...getValue(hands));
+    const minPlayerValue = Math.min(...getValue(hands));
+    const playerValue = maxPlayerValue > 21 ? minPlayerValue : maxPlayerValue;
     // Hit if the player value is less than 17
     if(playerValue < 17) {
         return actions.Hit;

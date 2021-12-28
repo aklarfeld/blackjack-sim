@@ -1,20 +1,30 @@
 const { hardLookup, softLookup, splitLookup } = require('./v1');
 const { getValue } = require('../helper');
-const actions = require('../actions');
+const { actions } = require('../actions');
 
-const bookStrategy = ({ playerHand, dealerFaceUp }) => {
-    if(playerHand.every(card => card.value === playerHand[0].value)) {
-        const playerAction = splitLookup[dealerFaceUp.value][getValue(playerHand)];
+const bookStrategy = ({ hands, dealerFaceUp }) => {
+    const playerValue = Math.max(...getValue(hands))
+    let playerAction;
+    if(hands.every(card => card.value === hands[0].value)) {
+        playerAction = splitLookup[dealerFaceUp.value][playerValue];
         if(playerAction === actions.Split) { 
             return actions.Split;
         }
     }
-    
-    if(playerHand.length === 2 && playerHand.some(card => card.rank === 'Ace')) {
-        return softLookup[dealerFaceUp.value][getValue(playerHand)]
+
+    if(hands.length === 2 && hands.some(card => card.rank === 'Ace')) {
+        playerAction = softLookup[dealerFaceUp.value][playerValue];
     } else {
-        return hardLookup[dealerFaceUp.value][getValue(playerHand)];
+        playerAction = hardLookup[dealerFaceUp.value][playerValue];
     }
+
+    if(playerAction === actions.Surrender && hands.length > 2) {
+        // Should probably implement surrender logic ... to decide to hit or stay
+        // default to "Hit"
+        return actions.Hit;
+    }
+
+    return playerAction || actions.Stand;
     
 }
 
