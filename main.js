@@ -105,5 +105,5 @@ const monteCarlo = ({ simulateAmount, numDecks, playerStrategy, dealerStrategy }
 // console.log(playShoe(6, bookStrategy, simpleStrategy))
 
 // Simulate basic strategy 10k times with 6 decks, where player hits until above 17
-// monteCarlo({ simulateAmount: 10000, numDecks: 6, playerStrategy: bookStrategy, dealerStrategy: simpleStrategy })
+monteCarlo({ simulateAmount: 10000, numDecks: 6, playerStrategy: bookStrategy, dealerStrategy: simpleStrategy })
 
