@@ -1,6 +1,5 @@
 // Amazon book strategy
 
-const { ranks } = require('../deck');
 const { actions } = require('../actions');
 // Dealer Upcard is the first key, total max value is the second key
 

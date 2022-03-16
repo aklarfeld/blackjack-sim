@@ -11,6 +11,8 @@
     }
   },
   "dependencies": {
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "ramda": "^0.28.0",
     "simple-args-parser": "^1.0.1"
   },

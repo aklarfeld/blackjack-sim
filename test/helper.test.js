@@ -8,7 +8,7 @@ const {
 } = require('../helper');
 const { getDeck } = require('../deck');
 const { makeCard, makeHand, makeDecks } = require('./fixtures');
-const { simpleStrategy, bookStrategy } = require('../strategies');
+const { bookStrategy } = require('../strategies');
 
 describe('Helper functions operate correctly', () => {
   it('should generate the intended card by short name', () => {
