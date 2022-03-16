@@ -2,12 +2,13 @@
   "scripts": {
     "hand": "node playHand.js",
     "shoe": "node playShoe.js",
-    "test": "jest --ci"
+    "test": "cross-env CI=true jest --ci",
+    "lint": "eslint ."
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn run eslint . && yarn run test",
-      "pre-commit": "yarn run eslint . && yarn run test"
+      "pre-commit": "yarn run lint && yarn run test",
+      "pre-push": "yarn run lint && yarn run test"
     }
   },
   "dependencies": {
