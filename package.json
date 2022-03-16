@@ -2,13 +2,19 @@
   "scripts": {
     "hand": "node playHand.js",
     "shoe": "node playShoe.js",
-    "test": "jest"
+    "test": "jest --ci"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn run eslint && yarn run test"
+    }
   },
   "dependencies": {
     "ramda": "^0.28.0",
     "simple-args-parser": "^1.0.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-node": "^4.1.0",
