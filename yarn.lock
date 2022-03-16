@@ -1967,6 +1967,11 @@ signal-exit@^3.0.2:
   resolved "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.7.tgz"
   integrity sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==
 
+simple-args-parser@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/simple-args-parser/-/simple-args-parser-1.0.1.tgz#a001c12e9f577b45864b62012c712e74b24bdb5d"
+  integrity sha512-csWPG2g694BFHWVwqsfnveeDba7kGasJuJwLK6OHbbNiXKLj3iPKB2WgWiCf7QTfo63UigQP7Rb9oUfa862DjQ==
+
 slice-ansi@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/slice-ansi/-/slice-ansi-2.1.0.tgz"

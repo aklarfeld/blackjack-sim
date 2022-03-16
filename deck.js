@@ -41,8 +41,8 @@ const getDeck = () => {
   const deck = [];
   const suiteKeys = Object.keys(suites);
   const rankKeys = Object.keys(ranks);
-  for (let i = 0; i < suiteKeys.length; i++) {
-    for (let j = 0; j < rankKeys.length; j++) {
+  for (let i = 0; i < suiteKeys.length; i += 1) {
+    for (let j = 0; j < rankKeys.length; j += 1) {
       const suite = suiteKeys[i];
       const rank = rankKeys[j];
       deck.push({ suite, rank, name: `${ranks[rank]}${suites[suite]}`, value: values[rank] });
@@ -52,7 +52,8 @@ const getDeck = () => {
 };
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-const shuffleDeck = (array) => {
+const shuffleDeck = (inputArray) => {
+  const array = [...inputArray];
   let currentIndex = array.length;
   let randomIndex;
 
@@ -60,7 +61,7 @@ const shuffleDeck = (array) => {
   while (currentIndex !== 0) {
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
+    currentIndex -= 1;
 
     // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];

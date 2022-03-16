@@ -1,4 +1,13 @@
 const R = require('ramda');
+const { actions } = require('./actions');
+
+const randomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+const debug = (...params) => {
+  if (process.argv.includes('--debug')) {
+    console.log(params);
+  }
+};
 
 const getValue = (cards) => {
   const values = [];
@@ -20,15 +29,61 @@ const getCount = (card) => {
   return 0;
 };
 
+const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks }) => {
+  let hands = [...inputHands];
+  if (hands.length) {
+    for (let i = 0; i < hands.length; i += 1) {
+      while (hands[i].hands.length < 2) {
+        hands[i].hands = [...hands[i].hands, decks.pop()];
+      }
+    }
+  } else {
+    hands = [{ hands: [decks.pop(), decks.pop()], bet: 1 }];
+  }
+
+  for (let i = 0; i < hands.length; i += 1) {
+    const playerHand = hands[i];
+    let playerAction = strategy({ hands: playerHand.hands, dealerFaceUp });
+    let playerValue = Math.min(...getValue(playerHand.hands));
+    while (actions.Stand !== playerAction && playerValue < 21) {
+      if (playerAction === actions.Hit) {
+        playerHand.hands.push(decks.pop());
+        playerValue = Math.min(...getValue(playerHand.hands));
+        playerAction = strategy({ hands: playerHand.hands, dealerFaceUp });
+      } else if (playerAction === actions.Surrender) {
+        playerHand.bet *= 0.5;
+        playerAction = actions.Stand;
+      } else if (playerAction === actions.Double) {
+        playerHand.hands.push(decks.pop());
+        playerValue = Math.min(...getValue(playerHand.hands));
+        playerHand.bet *= 2;
+        playerAction = actions.Stand;
+      } else if (playerAction === actions.Split) {
+        hands.push({ hands: [playerHand.hands.pop()], bet: 1 });
+        return playHand({
+          inputHands: hands,
+          dealerFaceUp,
+          strategy,
+          decks,
+        });
+      }
+    }
+  }
+  return { hands };
+};
+
+const evaluateHands = ({ playerHand, dealerHand }) => {
+  const playerValue = Math.max(...getValue(playerHand.hands));
+  const dealerValue = Math.max(...getValue(dealerHand.hands));
+  if (playerHand.bet === 0.5) return -playerHand.bet; // Need to figure out a better way to detect surrenders
+  if (playerValue > 21) return -playerHand.bet;
+  if (dealerValue > playerValue && dealerValue <= 21) return -playerHand.bet;
+  if (playerValue < dealerValue && dealerValue > 21) return playerHand.bet;
+  if (dealerValue < playerValue) return playerHand.bet;
+  return 0;
+};
+
 const getPlayerCardsByValue = ({ value, decks, forceSplit = false, forceSoft = false }) => {
-  // if(value === 21 && !forceSoft) {
-  //     throw new Error('Can not use 21 without "forceSoft" = true')
-  // }
-
-  // if(value === 20 && !forceSplit) {
-  //     throw new Error('Can not use 20 without "forceSplit" = true')
-  // }
-
   const firstCardSearchStrategy = (card) => {
     if (forceSoft) {
       return card.value === value - 11;
@@ -60,4 +115,8 @@ module.exports = {
   getCount,
   getPlayerCardsByValue,
   getDealerCardByValue,
+  playHand,
+  evaluateHands,
+  debug,
+  randomBetween,
 };

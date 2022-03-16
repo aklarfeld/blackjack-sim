@@ -1,13 +1,11 @@
 const { actions } = require('./actions');
 const { bookStrategy } = require('./books');
-const { ranks } = require('./deck');
-const { getDeck, shuffleDeck } = require('./deck');
 const { getValue } = require('./helper');
 
 const hiLoCountingStrategy = ({ card }) => {
   if (card.value <= 6) return 1;
   if (card.value > 6 && card.value < 10) return 0;
-  if (card.value >= 10) return -1;
+  return -1;
 };
 
 // Dealer strategy

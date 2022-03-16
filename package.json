@@ -1,7 +1,12 @@
 {
+  "scripts": {
+    "hand": "node playHand.js",
+    "shoe": "node playShoe.js"
+  },
   "dependencies": {
     "prettier-eslint": "10.1.0",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "simple-args-parser": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^8.2.0",
