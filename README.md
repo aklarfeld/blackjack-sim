@@ -1,5 +1,7 @@
 # Blackjack Odds Simulator
 
+![Tests](https://github.com/aklarfeld/blackjack-sim/actions/workflows/tests.yaml/badge.svg)
+
 
 ## Simulate a full shoe
 
