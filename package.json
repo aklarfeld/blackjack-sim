@@ -6,7 +6,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn run eslint && yarn run test"
+      "pre-push": "yarn run eslint && yarn run test",
+      "pre-commit": "yarn run eslint && yarn run test"
     }
   },
   "dependencies": {
