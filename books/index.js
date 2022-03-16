@@ -14,7 +14,15 @@ const bookStrategy = ({ hands, dealerFaceUp }) => {
 
     if(hands.length === 2 && hands.some(card => card.rank === 'Ace')) {
         playerAction = softLookup[dealerFaceUp.value][playerValue];
-    } else {
+    }
+
+    // Means that it's soft, but there's more than 2 cards
+    else if (hands.length > 2 && getValue(hands).length > 1) {
+        const thirdCardAction = softLookup[dealerFaceUp.value][playerValue];
+        playerAction = thirdCardAction === actions.Double ? actions.Hit : thirdCardAction;
+    }
+
+    else {
         playerAction = hardLookup[dealerFaceUp.value][playerValue];
     }
 

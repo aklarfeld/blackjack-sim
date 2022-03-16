@@ -1,5 +1,5 @@
 const { getDeck, shuffleDeck } = require('./deck');
-const { getValue } = require('./helper');
+const { getValue, getPlayerCardsByValue, getDealerCardByValue } = require('./helper');
 const { simpleStrategy } = require('./strategies');
 const { actions } = require('./actions');
 const { bookStrategy } = require('./books');
@@ -81,18 +81,53 @@ const evaluateHands = ({ playerHand, dealerHand }) => {
     if(dealerValue === playerValue) return 0;
 }
 
-const testPlayHand = () => {
+// const testPlayHand = () => {
+//     const decks = [...Array(6).keys()].reduce((combined, d) => [...combined, ...shuffleDeck(getDeck())], [])
+//     const dealerFaceUp = decks.pop();
+//     console.log('Dealer', dealerFaceUp)
+//     const splits = [{ hands: [{ suite: 'Clubs', rank: 'Ace', name: 'AC', value: 11 }, { suite: 'Hearts', rank: 'Ace', name: 'AH', value: 11 }], bet: 1 }]
+//     const { hands } = playHand({ hands: splits, dealerFaceUp, decks, strategy: bookStrategy });
+//     console.log('Hands', hands.map(ph => ph.hands))
+//     console.log('Finished hand');
+// }
+
+const testSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => {
     const decks = [...Array(6).keys()].reduce((combined, d) => [...combined, ...shuffleDeck(getDeck())], [])
-    const dealerFaceUp = decks.pop();
-    console.log('Dealer', dealerFaceUp)
-    const splits = [{ hands: [{ suite: 'Clubs', rank: 'Ace', name: 'AC', value: 11 }, { suite: 'Hearts', rank: 'Ace', name: 'AH', value: 11 }], bet: 1 }]
-    const { hands } = playHand({ hands: splits, dealerFaceUp, decks, strategy: bookStrategy });
-    console.log('Hands', hands.map(ph => ph.hands))
-    console.log('Finished hand');
+    const { cards } = getPlayerCardsByValue({ value: playerValue, decks, forceSoft, forceSplit });
+    const { card: dealerFaceUp } = getDealerCardByValue({ value: dealerValue, decks });
+    const { hands: playerHands } = playHand({ hands: [{ hands: [...cards], bet: 1}], dealerFaceUp, decks, strategy: bookStrategy });
+    const { hands: dealerHands } = playHand({ hands: [{ hands: [dealerFaceUp], bet: 1 }], dealerFaceUp, decks, strategy: simpleStrategy });
+    let win = 0;
+    for(let i=0; i < playerHands.length; i++) {
+        win += evaluateHands({ playerHand: playerHands[i], dealerHand: dealerHands[0] });
+    }
+
+    // console.log('Initial Player Hand', JSON.stringify(cards, null, 2));
+    // console.log('Dealer Face Up', JSON.stringify(dealerFaceUp, null, 2));
+    // console.log('Player Hand', JSON.stringify(playerHands, null, 2));
+    // console.log('Dealer Hand', JSON.stringify(dealerHands, null, 2));
+    // console.log({ win, deckLength: decks.length });
+    return win;
 }
 
-const monteCarlo = ({ simulateAmount, numDecks, playerStrategy, dealerStrategy }) => {
-    let runningWin = 0;
+const monteCarloSingleHand = ({ simulateAmount, dealerValue, playerValue, forceSoft = false, forceSplit = false }) => {
+    let wins = 0;
+    let losses = 0;
+    for(let i=0; i<simulateAmount; i++) {
+        const outcome = testSingleHand({ dealerValue, playerValue, forceSoft, forceSplit });
+        if(outcome < 0) {
+            losses += 1;
+        } else if (outcome > 0) {
+            wins += 1;
+        }
+    }
+    console.log({ wins, losses, simulateAmount, dealerValue, playerValue, forceSoft, forceSplit, ev: (wins + (-1 * losses)) / simulateAmount })
+}
+
+const monteCarloFullStrategy = ({ simulateAmount, numDecks, playerStrategy, dealerStrategy }) => {
+    let losses = 0;
+    let wins = 0;
+
     let totalHandsPlayed = 0;
     for(let i=0; i<simulateAmount; i++) {
         const { win, handsPlayed } = playShoe(numDecks, playerStrategy, dealerStrategy);
@@ -105,5 +140,21 @@ const monteCarlo = ({ simulateAmount, numDecks, playerStrategy, dealerStrategy }
 // console.log(playShoe(6, bookStrategy, simpleStrategy))
 
 // Simulate basic strategy 10k times with 6 decks, where player hits until above 17
-monteCarlo({ simulateAmount: 10000, numDecks: 1, playerStrategy: bookStrategy, dealerStrategy: simpleStrategy })
+// monteCarloFullStrategy({ simulateAmount: 10000, numDecks: 1, playerStrategy: bookStrategy, dealerStrategy: simpleStrategy })
+// testSingleHand({ dealerValue: 3, playerValue: 12 })
 
+// 3 vs 12 : Hit -23.5%
+// 2 vs 12 : Hit -25.7%
+
+// 3 vs 13 : Stand -13.82%
+// 2 vs 13 : Stand -17.8%
+
+/* --------------------- */
+
+// 3 vs 12 : Stand -13.1%
+// 2 vs 12 : Stand  -17.9%
+
+// 3 vs 13 : Hit -30.9%
+// 2 vs 13 : Hit -32.3%
+
+monteCarloSingleHand({ simulateAmount: 1, dealerValue: 3, playerValue: 14, forceSoft: true })
