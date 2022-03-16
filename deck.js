@@ -70,8 +70,12 @@ const shuffleDeck = (inputArray) => {
   return array;
 };
 
+const makeDecks = (numDecks = 6) =>
+  [...Array(numDecks).keys()].reduce((combined) => [...combined, ...shuffleDeck(getDeck())], []);
+
 module.exports = {
   getDeck,
+  makeDecks,
   shuffleDeck,
   ranks,
   suites,

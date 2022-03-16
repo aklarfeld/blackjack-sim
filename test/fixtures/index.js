@@ -19,7 +19,4 @@ const makeHand = (shortNames, bet = 1) => ({
   bet,
 });
 
-const makeDecks = (numDecks = 6) =>
-  [...Array(numDecks).keys()].reduce((combined, d) => [...combined, ...shuffleDeck(getDeck())], []);
-
-module.exports = { makeHand, makeCard, makeDecks };
+module.exports = { makeHand, makeCard };

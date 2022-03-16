@@ -6,8 +6,8 @@ const {
   evaluateHands,
   getValue,
 } = require('../helper');
-const { getDeck } = require('../deck');
-const { makeCard, makeHand, makeDecks } = require('./fixtures');
+const { getDeck, makeDecks } = require('../deck');
+const { makeCard, makeHand } = require('./fixtures');
 const { bookStrategy } = require('../strategies');
 
 describe('Helper functions operate correctly', () => {
