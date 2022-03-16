@@ -101,4 +101,6 @@ describe('Helper functions operate correctly', () => {
       expect(getValue([card])).toEqual(expect.arrayContaining([value]));
     });
   });
+
+  it('should fail', () => expect(false).toEqual(true));
 });
