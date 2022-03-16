@@ -1,4 +1,4 @@
-const { ranks, suites, values, getDeck, shuffleDeck } = require('../../deck');
+const { ranks, suites, values } = require('../../deck');
 
 const flip = (obj) => Object.fromEntries(Object.entries(obj).map((a) => a.reverse()));
 const flippedSuites = flip(suites);
