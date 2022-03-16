@@ -11,17 +11,20 @@ const { simpleStrategy, bookStrategy } = require('./strategies');
 const { hardLookup, softLookup, splitLookup } = require('./books/v1');
 
 const playSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => {
-  const decks = [...Array(6).keys()].reduce(
+  const inputDecks = [...Array(6).keys()].reduce(
     (combined, d) => [...combined, ...shuffleDeck(getDeck())],
     [],
   );
-  const { cards } = getPlayerCardsByValue({
-    value: playerValue,
-    decks,
+  const { cards, decks } = getPlayerCardsByValue({
+    inputValue: playerValue,
+    inputDecks,
     forceSoft,
     forceSplit,
   });
-  const { card: dealerFaceUp } = getDealerCardByValue({ value: dealerValue, decks });
+  const { card: dealerFaceUp, decks: decksToPlay } = getDealerCardByValue({
+    inputValue: dealerValue,
+    inputDecks: decks,
+  });
   const { hands: playerHands } = playHand({
     inputHands: [{ hands: [...cards], bet: 1 }],
     dealerFaceUp,
@@ -31,7 +34,7 @@ const playSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => 
   const { hands: dealerHands } = playHand({
     inputHands: [{ hands: [dealerFaceUp], bet: 1 }],
     dealerFaceUp,
-    decks,
+    decks: decksToPlay,
     strategy: simpleStrategy,
   });
   let win = 0;
@@ -98,6 +101,15 @@ const monteCarloSingleHand = ({
     short: [],
     stupid: [],
   });
+
+  if (parseInt(args.dealerValue, 10) < 1 || parseInt(args.dealerValue, 10) > 11) {
+    throw new Error('Dealer value must be between 1 and 11');
+  }
+
+  if (parseInt(args.playerValue, 10) < 2 || parseInt(args.playerValue, 10) > 21) {
+    throw new Error('Player value must be between 2 and 21');
+  }
+
   monteCarloSingleHand({
     simulateAmount: parseInt(args.simulateAmount, 10) || 1000,
     dealerValue: parseInt(args.dealerValue, 10),

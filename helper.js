@@ -83,7 +83,24 @@ const evaluateHands = ({ playerHand, dealerHand }) => {
   return 0;
 };
 
-const getPlayerCardsByValue = ({ value, decks, forceSplit = false, forceSoft = false }) => {
+const getPlayerCardsByValue = ({
+  inputValue,
+  inputDecks,
+  forceSplit = false,
+  forceSoft = false,
+}) => {
+  const decks = [...inputDecks];
+  let value = inputValue;
+
+  // Two's and threes need an Ace, and Ace is 11 in the deck
+  if (inputValue === 2) {
+    value = 22;
+  } else if (inputValue === 3) {
+    value = 13;
+  } else if (inputValue === 11) {
+    value = 21;
+  }
+
   const firstCardSearchStrategy = (card) => {
     if (forceSoft) {
       return card.value === value - 11;
@@ -91,7 +108,18 @@ const getPlayerCardsByValue = ({ value, decks, forceSplit = false, forceSoft = f
     if (forceSplit) {
       return card.value === value / 2;
     }
-    return card.value > value / 2 && card.value !== 11;
+
+    // Default to split
+    if ([4, 20, 22].includes(value)) {
+      return card.value === value / 2;
+    }
+
+    // Default to soft
+    if ([11, 21, 13].includes(value)) {
+      return card.value === value - 11;
+    }
+
+    return value <= 10 ? card.value <= value / 2 : card.value > value / 2 && card.value !== 11;
   };
 
   const firstCardIndex = R.findIndex((card) => firstCardSearchStrategy(card), decks);
@@ -100,14 +128,16 @@ const getPlayerCardsByValue = ({ value, decks, forceSplit = false, forceSoft = f
   const secondCardIndex = R.findIndex((card) => value - firstCard.value === card.value, decks);
   const secondCard = decks[secondCardIndex];
   decks.splice(secondCardIndex, 1);
-  return { cards: [firstCard, secondCard] };
+  return { decks, cards: [firstCard, secondCard] };
 };
 
-const getDealerCardByValue = ({ value, decks }) => {
+const getDealerCardByValue = ({ inputValue, inputDecks }) => {
+  const value = inputValue === 1 ? 11 : inputValue;
+  const decks = [...inputDecks];
   const cardIndex = R.findIndex(R.propEq('value', value), decks);
   const card = decks[cardIndex];
   decks.splice(cardIndex, 1);
-  return { card };
+  return { card, decks };
 };
 
 module.exports = {
