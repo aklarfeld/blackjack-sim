@@ -29,7 +29,6 @@ const playShoe = ({
       dealerFaceUp,
       decks,
       trueCount: getTrueCount({ runningCount, decks }),
-      isCardCountingActive,
     });
     const { hands: dealerHands } = playHand({
       hands: [{ hands: [dealerFaceUp], bet: 1 }],

@@ -130,16 +130,18 @@ describe('Helper functions operate correctly', () => {
   it('should get player cards by value', () => {
     R.range(4, 22).forEach((value) => {
       const decks = [...makeDecks()];
-      const { cards } = getPlayerCardsByValue({ inputValue: value, inputDecks: decks });
+      const { cards } = getPlayerCardsByValue({ inputValue: value, decks });
       expect(getValue(cards)).toEqual(expect.arrayContaining([value]));
+      expect(decks.length).toEqual(52 * 6 - 2);
     });
   });
 
   it('should get dealer cards by value', () => {
     R.range(2, 11).forEach((value) => {
       const decks = [...makeDecks()];
-      const { card } = getDealerCardByValue({ inputValue: value, inputDecks: decks });
+      const { card } = getDealerCardByValue({ inputValue: value, decks });
       expect(getValue([card])).toEqual(expect.arrayContaining([value]));
+      expect(decks.length).toEqual(52 * 6 - 1);
     });
   });
 

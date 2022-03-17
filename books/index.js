@@ -1,14 +1,21 @@
+const parser = require('simple-args-parser');
 const { hardLookup, softLookup, splitLookup, countLookup } = require('./v1');
 const { getValue } = require('../helper');
 const { actions } = require('../actions');
+
+const args = parser.parse(process.argv, {
+  long: ['doubleAfterSplit', 'countCards'],
+  short: [],
+  stupid: [],
+});
 
 const bookStrategy = ({
   hands,
   dealerFaceUp,
   hasSplit,
   trueCount,
-  canDoubleAfterSplit = true,
-  isCardCountingActive = false,
+  canDoubleAfterSplit = args.doubleAfterSplit,
+  isCardCountingActive = args.countCards,
 }) => {
   const playerValue = Math.max(...getValue(hands));
   let playerAction = countLookup({ hands, playerValue, dealerFaceUp, trueCount });

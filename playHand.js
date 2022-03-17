@@ -13,13 +13,13 @@ const playSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => 
   const inputDecks = [...makeDecks()];
   const { cards } = getPlayerCardsByValue({
     inputValue: playerValue,
-    inputDecks,
+    decks: inputDecks,
     forceSoft,
     forceSplit,
   });
   const { card: dealerFaceUp } = getDealerCardByValue({
     inputValue: dealerValue,
-    inputDecks,
+    decks: inputDecks,
   });
   const { hands: playerHands } = playHand({
     inputHands: [{ hands: [...cards], bet: 1 }],

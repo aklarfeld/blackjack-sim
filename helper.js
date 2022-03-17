@@ -74,7 +74,6 @@ const playHand = ({
   decks,
   trueCount,
   initialBet = 1,
-  canDoubleAfterSplit = true,
 }) => {
   let hands = [...inputHands];
   if (hands.length) {
@@ -94,7 +93,6 @@ const playHand = ({
     let playerAction = strategy({
       hands: playerHand.hands,
       dealerFaceUp,
-      canDoubleAfterSplit,
       hasSplit,
       trueCount,
     });
@@ -105,7 +103,6 @@ const playHand = ({
         playerAction = strategy({
           hands: playerHand.hands,
           dealerFaceUp,
-          canDoubleAfterSplit,
           hasSplit,
           trueCount,
         });
@@ -124,7 +121,6 @@ const playHand = ({
           strategy,
           decks,
           bet: initialBet,
-          canDoubleAfterSplit,
         });
       }
     }
@@ -143,13 +139,7 @@ const evaluateHands = ({ playerHand, dealerHand }) => {
   return 0;
 };
 
-const getPlayerCardsByValue = ({
-  inputValue,
-  inputDecks,
-  forceSplit = false,
-  forceSoft = false,
-}) => {
-  const decks = [...inputDecks];
+const getPlayerCardsByValue = ({ inputValue, decks, forceSplit = false, forceSoft = false }) => {
   let value = inputValue;
 
   // Two's and threes need an Ace, and Ace is 11 in the deck
@@ -186,12 +176,11 @@ const getPlayerCardsByValue = ({
   const secondCardIndex = R.findIndex((card) => value - firstCard.value === card.value, decks);
   const secondCard = decks[secondCardIndex];
   decks.splice(secondCardIndex, 1);
-  return { decks, cards: [firstCard, secondCard] };
+  return { cards: [firstCard, secondCard] };
 };
 
-const getDealerCardByValue = ({ inputValue, inputDecks }) => {
+const getDealerCardByValue = ({ inputValue, decks }) => {
   const value = inputValue === 1 ? 11 : inputValue;
-  const decks = [...inputDecks];
   const cardIndex = R.findIndex(R.propEq('value', value), decks);
   const card = decks[cardIndex];
   decks.splice(cardIndex, 1);
