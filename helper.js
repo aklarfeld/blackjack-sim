@@ -3,6 +3,8 @@ const { actions } = require('./actions');
 
 const randomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
+const getTrueCount = ({ decks, runningCount }) => (runningCount * 1.0) / (decks.length / 52.0);
+
 const debug = (...params) => {
   if (process.argv.includes('--debug')) {
     console.log(params);
@@ -34,6 +36,7 @@ const playHand = ({
   dealerFaceUp,
   strategy,
   decks,
+  trueCount,
   initialBet = 1,
   canDoubleAfterSplit = true,
 }) => {
@@ -57,24 +60,24 @@ const playHand = ({
       dealerFaceUp,
       canDoubleAfterSplit,
       hasSplit,
+      trueCount,
     });
-    let playerValue = Math.min(...getValue(playerHand.hands));
+    const playerValue = Math.min(...getValue(playerHand.hands));
     while (actions.Stand !== playerAction && playerValue < 21) {
       if (playerAction === actions.Hit) {
         playerHand.hands.push(decks.pop());
-        playerValue = Math.min(...getValue(playerHand.hands));
         playerAction = strategy({
           hands: playerHand.hands,
           dealerFaceUp,
           canDoubleAfterSplit,
           hasSplit,
+          trueCount,
         });
       } else if (playerAction === actions.Surrender) {
         playerHand.bet *= 0.5;
         playerAction = actions.Stand;
       } else if (playerAction === actions.Double) {
         playerHand.hands.push(decks.pop());
-        playerValue = Math.min(...getValue(playerHand.hands));
         playerHand.bet *= 2;
         playerAction = actions.Stand;
       } else if (playerAction === actions.Split) {
@@ -164,6 +167,7 @@ const getDealerCardByValue = ({ inputValue, inputDecks }) => {
 module.exports = {
   getValue,
   getCount,
+  getTrueCount,
   getPlayerCardsByValue,
   getDealerCardByValue,
   playHand,

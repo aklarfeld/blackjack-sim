@@ -1,6 +1,7 @@
 // Strategy: https://www.blackjackapprenticeship.com/wp-content/uploads/2018/08/BJA_Basic_Strategy.jpg
 
 const { actions } = require('../actions');
+const { ranks } = require('../deck');
 // Dealer Upcard is the first key, total max value is the second key
 
 // Hard means no ace
@@ -383,10 +384,85 @@ const splitLookup = {
     4: actions.DontSplit,
   },
 };
-// Splits
+
+const countLookup = ({ hands, playerValue, dealerFaceUp, trueCount }) => {
+  // Illustrious 18
+
+  if (dealerFaceUp.rank === ranks.Ace && trueCount >= 3) {
+    return actions.Insurance;
+  }
+  if (playerValue === 16 && dealerFaceUp.value === 10 && trueCount >= 0) {
+    return actions.Stand;
+  }
+  if (playerValue === 15 && dealerFaceUp.value === 10 && trueCount >= 4) {
+    return actions.Stand;
+  }
+  if (hands.every((card) => card.value === 10) && dealerFaceUp.value === 5 && trueCount >= 5) {
+    return actions.Split;
+  }
+  if (hands.every((card) => card.value === 10) && dealerFaceUp.value === 6 && trueCount >= 4) {
+    return actions.Split;
+  }
+  if (playerValue === 10 && dealerFaceUp.value === 10 && trueCount >= 4) {
+    return actions.Double;
+  }
+  if (playerValue === 12 && dealerFaceUp.value === 3 && trueCount >= 2) {
+    return actions.Stand;
+  }
+  if (playerValue === 12 && dealerFaceUp.value === 2 && trueCount >= 3) {
+    return actions.Stand;
+  }
+  if (playerValue === 11 && dealerFaceUp.value === 11 && trueCount >= 1) {
+    return actions.Double;
+  }
+  if (playerValue === 9 && dealerFaceUp.value === 2 && trueCount >= 1) {
+    return actions.Double;
+  }
+  if (playerValue === 10 && dealerFaceUp.value === 11 && trueCount >= 4) {
+    return actions.Double;
+  }
+  if (playerValue === 9 && dealerFaceUp.value === 7 && trueCount >= 3) {
+    return actions.Double;
+  }
+  if (playerValue === 16 && dealerFaceUp.value === 9 && trueCount >= 5) {
+    return actions.Stand;
+  }
+  if (playerValue === 13 && dealerFaceUp.value === 2 && trueCount <= -1) {
+    return actions.Hit;
+  }
+  if (playerValue === 12 && dealerFaceUp.value === 4 && trueCount <= 0) {
+    return actions.Hit;
+  }
+  if (playerValue === 12 && dealerFaceUp.value === 5 && trueCount <= -2) {
+    return actions.Hit;
+  }
+  if (playerValue === 12 && dealerFaceUp.value === 6 && trueCount <= -1) {
+    return actions.Hit;
+  }
+  if (playerValue === 13 && dealerFaceUp.value === 3 && trueCount <= -2) {
+    return actions.Hit;
+  }
+
+  // Fab 4 surrenders
+  if (playerValue === 14 && dealerFaceUp.value === 10 && trueCount >= 3) {
+    return actions.Surrender;
+  }
+  if (playerValue === 15 && dealerFaceUp.value === 10 && trueCount >= 0) {
+    return actions.Surrender;
+  }
+  if (playerValue === 15 && dealerFaceUp.value === 9 && trueCount >= 2) {
+    return actions.Surrender;
+  }
+  if (playerValue === 15 && dealerFaceUp.value === 11 && trueCount >= 1) {
+    return actions.Surrender;
+  }
+
+  return null;
+};
 
 module.exports = {
   softLookup,
   hardLookup,
   splitLookup,
+  countLookup,
 };

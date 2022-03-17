@@ -5,6 +5,7 @@ const actions = {
   Split: 'Split',
   Surrender: 'Surrender',
   DontSplit: 'DontSplit',
+  Insurance: 'Insurance',
 };
 
 module.exports = { actions };
