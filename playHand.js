@@ -1,5 +1,5 @@
 const parser = require('simple-args-parser');
-const { makeDecks } = require('./deck');
+const { makeDecks } = require('./helper');
 const {
   getPlayerCardsByValue,
   getDealerCardByValue,

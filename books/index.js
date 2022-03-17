@@ -47,7 +47,7 @@ const bookStrategy = ({
     playerAction = hardLookup[dealerFaceUp.value][playerValue];
   }
 
-  return playerAction;
+  return playerAction || actions.Stand;
 };
 
 const hiLoCountingStrategy = ({ card }) => {
