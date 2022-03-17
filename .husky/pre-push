@@ -1,7 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn run lint && yarn run test
-yarn run lint && jest --clearCache && yarn run test
-yarn run lint
 yarn run lint
