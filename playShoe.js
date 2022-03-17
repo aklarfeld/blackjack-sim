@@ -1,14 +1,11 @@
 const parser = require('simple-args-parser');
-const { getDeck, shuffleDeck } = require('./deck');
+const { getDeck, shuffleDeck, makeDecks } = require('./deck');
 const { playHand, evaluateHands, debug, randomBetween } = require('./helper');
 const { simpleStrategy, bookStrategy, hiLoCountingStrategy } = require('./strategies');
 
 const playShoe = ({ numDecks, playerStrategy, dealerStrategy, countingStrategy }) => {
   debug('*** START SHOE ***');
-  const decks = [...Array(numDecks).keys()].reduce(
-    (combined) => [...combined, ...shuffleDeck(getDeck())],
-    [],
-  );
+  const decks = makeDecks(numDecks);
   const cutIndex = randomBetween(decks.length / 2, (decks.length * 3) / 4);
   let runningWin = 0;
   let handsPlayed = 0;
@@ -73,8 +70,8 @@ const monteCarloFullShoe = ({ simulateAmount, numDecks, playerStrategy, dealerSt
     stupid: [],
   });
   monteCarloFullShoe({
-    simulateAmount: args.simulateAmount || 1000,
-    numDecks: args.numDecks || 6,
+    simulateAmount: parseInt(args.simulateAmount, 10) || 1000,
+    numDecks: parseInt(args.numDecks, 10) || 6,
     playerStrategy: bookStrategy,
     dealerStrategy: simpleStrategy,
   });

@@ -29,7 +29,7 @@ const getCount = (card) => {
   return 0;
 };
 
-const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks }) => {
+const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks, initialBet = 1 }) => {
   let hands = [...inputHands];
   if (hands.length) {
     for (let i = 0; i < hands.length; i += 1) {
@@ -38,7 +38,7 @@ const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks }) => {
       }
     }
   } else {
-    hands = [{ hands: [decks.pop(), decks.pop()], bet: 1 }];
+    hands = [{ hands: [decks.pop(), decks.pop()], bet: initialBet }];
   }
 
   for (let i = 0; i < hands.length; i += 1) {
@@ -59,7 +59,7 @@ const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks }) => {
         playerHand.bet *= 2;
         playerAction = actions.Stand;
       } else if (playerAction === actions.Split) {
-        hands.push({ hands: [playerHand.hands.pop()], bet: 1 });
+        hands.push({ hands: [playerHand.hands.pop()], bet: initialBet });
         return playHand({
           inputHands: hands,
           dealerFaceUp,
