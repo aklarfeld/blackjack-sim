@@ -7,7 +7,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn run lint && yarn run test"
+      "pre-push": "yarn run lint"
     }
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-// Amazon book strategy
+// Strategy: https://www.blackjackapprenticeship.com/wp-content/uploads/2018/08/BJA_Basic_Strategy.jpg
 
 const { actions } = require('../actions');
 // Dealer Upcard is the first key, total max value is the second key
@@ -151,9 +151,9 @@ const hardLookup = {
     12: actions.Hit,
     13: actions.Hit,
     14: actions.Hit,
-    15: actions.Surrender,
+    15: actions.Hit,
     16: actions.Surrender,
-    17: actions.Surrender, // Can stand?
+    17: actions.Stand,
   },
 };
 
@@ -165,7 +165,7 @@ const softLookup = {
     15: actions.Hit,
     16: actions.Hit,
     17: actions.Hit,
-    18: actions.Double, // Can Hit?
+    18: actions.Double,
     19: actions.Stand,
     20: actions.Stand,
   },
@@ -175,7 +175,7 @@ const softLookup = {
     15: actions.Hit,
     16: actions.Hit,
     17: actions.Double,
-    18: actions.Double, // Can Hit?
+    18: actions.Double,
     19: actions.Stand,
     20: actions.Stand,
   },
@@ -185,7 +185,7 @@ const softLookup = {
     15: actions.Double,
     16: actions.Double,
     17: actions.Double,
-    18: actions.Double, // Can Hit?
+    18: actions.Double,
     19: actions.Stand,
     20: actions.Stand,
   },
@@ -195,7 +195,7 @@ const softLookup = {
     15: actions.Double,
     16: actions.Double,
     17: actions.Double,
-    18: actions.Double, // Can Hit?
+    18: actions.Double,
     19: actions.Stand,
     20: actions.Stand,
   },
@@ -205,8 +205,8 @@ const softLookup = {
     15: actions.Double,
     16: actions.Double,
     17: actions.Double,
-    18: actions.Double, // Can Hit?
-    19: actions.Stand,
+    18: actions.Double,
+    19: actions.Double,
     20: actions.Stand,
   },
   7: {
@@ -264,31 +264,31 @@ const softLookup = {
 const splitLookup = {
   2: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
     18: actions.Split,
     16: actions.Split,
     14: actions.Split,
-    12: actions.Split, // Split only if double after
+    12: actions.DoubleAfterSplit,
     10: actions.DontSplit,
     8: actions.DontSplit,
-    6: actions.Split, // Split only if double after
-    4: actions.Split, // Split only if double after
+    6: actions.DoubleAfterSplit,
+    4: actions.DoubleAfterSplit,
   },
   3: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
     18: actions.Split,
     16: actions.Split,
     14: actions.Split,
     12: actions.Split,
     10: actions.DontSplit,
     8: actions.DontSplit,
-    6: actions.Split, // Split only if double after
-    4: actions.Split, // Split only if double after
+    6: actions.DoubleAfterSplit,
+    4: actions.DoubleAfterSplit,
   },
   4: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
     18: actions.Split,
     16: actions.Split,
     14: actions.Split,
@@ -300,85 +300,85 @@ const splitLookup = {
   },
   5: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
     18: actions.Split,
     16: actions.Split,
     14: actions.Split,
     12: actions.Split,
     10: actions.DontSplit,
-    8: actions.Split, // Split only if double after
+    8: actions.DoubleAfterSplit,
     6: actions.Split,
     4: actions.Split,
   },
   6: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
     18: actions.Split,
     16: actions.Split,
     14: actions.Split,
     12: actions.Split,
     10: actions.DontSplit,
-    8: actions.Split, // Split only if double after
+    8: actions.DoubleAfterSplit,
     6: actions.Split,
     4: actions.Split,
   },
   7: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
-    18: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
+    18: actions.DontSplit,
     16: actions.Split,
     14: actions.Split,
     12: actions.DontSplit,
     10: actions.DontSplit,
-    8: actions.DontSplit, // Split only if double after
+    8: actions.DontSplit,
     6: actions.Split,
     4: actions.Split,
   },
   8: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
-    18: actions.Split, // Should actually default to other logic
+    20: actions.DontSplit,
+    18: actions.Split,
     16: actions.Split,
     14: actions.DontSplit,
     12: actions.DontSplit,
     10: actions.DontSplit,
-    8: actions.DontSplit, // Split only if double after
+    8: actions.DontSplit,
     6: actions.DontSplit,
     4: actions.DontSplit,
   },
   9: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
-    18: actions.Split, // Should actually default to other logic
+    20: actions.DontSplit,
+    18: actions.Split,
     16: actions.Split,
     14: actions.DontSplit,
     12: actions.DontSplit,
     10: actions.DontSplit,
-    8: actions.DontSplit, // Split only if double after
+    8: actions.DontSplit,
     6: actions.DontSplit,
     4: actions.DontSplit,
   },
   10: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
-    18: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
+    18: actions.DontSplit,
     16: actions.Split,
     14: actions.DontSplit,
     12: actions.DontSplit,
     10: actions.DontSplit,
-    8: actions.DontSplit, // Split only if double after
+    8: actions.DontSplit,
     6: actions.DontSplit,
     4: actions.DontSplit,
   },
   11: {
     22: actions.Split,
-    20: actions.DontSplit, // Should actually default to other logic
-    18: actions.DontSplit, // Should actually default to other logic
+    20: actions.DontSplit,
+    18: actions.DontSplit,
     16: actions.Split,
     14: actions.DontSplit,
     12: actions.DontSplit,
     10: actions.DontSplit,
-    8: actions.DontSplit, // Split only if double after
+    8: actions.DontSplit,
     6: actions.DontSplit,
     4: actions.DontSplit,
   },
