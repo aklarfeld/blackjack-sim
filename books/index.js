@@ -8,7 +8,7 @@ const bookStrategy = ({
   hasSplit,
   trueCount,
   canDoubleAfterSplit = true,
-  isCardCountingActive = true,
+  isCardCountingActive = false,
 }) => {
   const playerValue = Math.max(...getValue(hands));
   let playerAction = countLookup({ hands, playerValue, dealerFaceUp, trueCount });
@@ -18,7 +18,7 @@ const bookStrategy = ({
     return playerAction;
   }
 
-  if (hands.every((card) => card.value === hands[0].value)) {
+  if (hands.length === 2 && hands.every((card) => card.value === hands[0].value)) {
     playerAction = splitLookup[dealerFaceUp.value][playerValue];
 
     if (playerAction === actions.DoubleAfterSplit && canDoubleAfterSplit) {

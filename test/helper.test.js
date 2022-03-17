@@ -19,7 +19,7 @@ describe('Helper functions operate correctly', () => {
   });
 
   it('should generate a deck correctly', () => {
-    const deck = makeDecks(1);
+    const deck = [...makeDecks(1)];
     expect(deck.length).toEqual(52);
   });
 
@@ -61,7 +61,7 @@ describe('Helper functions operate correctly', () => {
   it('should split the cards when the player is dealt two 8s', () => {
     const playerHand = makeHand(['8S', '8H']);
     const dealerFaceUp = makeCard('4C');
-    const decks = makeDecks();
+    const decks = [...makeDecks()];
     const output = playHand({
       inputHands: [playerHand],
       dealerFaceUp: dealerFaceUp,
@@ -74,9 +74,9 @@ describe('Helper functions operate correctly', () => {
   });
 
   it('should NOT split the cards when the player is dealt two 6s and theres no double after split', () => {
-    const playerHand = makeHand(['6S', '6H']);
+    const playerHand = makeHand(['6S', '6H', '6D']);
     const dealerFaceUp = makeCard('2C');
-    const decks = makeDecks();
+    const decks = [...makeDecks()];
     const output = playHand({
       inputHands: [playerHand],
       dealerFaceUp: dealerFaceUp,
@@ -84,13 +84,14 @@ describe('Helper functions operate correctly', () => {
       decks,
       canDoubleAfterSplit: false,
     });
+    console.log(JSON.stringify(output, null, 2));
     expect(output.hands.length).toEqual(1);
   });
 
   it('should NOT split the cards when the player is dealt two 4s against a dealer 3', () => {
     const playerHand = makeHand(['4S', '4H']);
     const dealerFaceUp = makeCard('3C');
-    const decks = makeDecks();
+    const decks = [...makeDecks()];
     const output = playHand({
       inputHands: [playerHand],
       dealerFaceUp: dealerFaceUp,
@@ -103,7 +104,7 @@ describe('Helper functions operate correctly', () => {
   it('should surrender with a 16 against a dealer Ace', () => {
     const playerHand = makeHand(['TS', '6H']);
     const dealerFaceUp = makeCard('AC');
-    const decks = makeDecks();
+    const decks = [...makeDecks()];
     const output = playHand({
       inputHands: [playerHand],
       dealerFaceUp: dealerFaceUp,
@@ -116,7 +117,7 @@ describe('Helper functions operate correctly', () => {
   it('should double the bet when the player is dealt an 11', () => {
     const playerHand = makeHand(['8S', '3H']);
     const dealerFaceUp = makeCard('4C');
-    const decks = makeDecks();
+    const decks = [...makeDecks()];
     const output = playHand({
       inputHands: [playerHand],
       dealerFaceUp: dealerFaceUp,
@@ -127,8 +128,8 @@ describe('Helper functions operate correctly', () => {
   });
 
   it('should get player cards by value', () => {
-    R.range(2, 22).forEach((value) => {
-      const decks = makeDecks();
+    R.range(4, 22).forEach((value) => {
+      const decks = [...makeDecks()];
       const { cards } = getPlayerCardsByValue({ inputValue: value, inputDecks: decks });
       expect(getValue(cards)).toEqual(expect.arrayContaining([value]));
     });
@@ -136,7 +137,7 @@ describe('Helper functions operate correctly', () => {
 
   it('should get dealer cards by value', () => {
     R.range(2, 11).forEach((value) => {
-      const decks = makeDecks();
+      const decks = [...makeDecks()];
       const { card } = getDealerCardByValue({ inputValue: value, inputDecks: decks });
       expect(getValue([card])).toEqual(expect.arrayContaining([value]));
     });

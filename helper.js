@@ -162,24 +162,22 @@ const getPlayerCardsByValue = ({
   }
 
   const firstCardSearchStrategy = (card) => {
-    if (forceSoft) {
+    if (forceSoft || [11, 21].includes(value)) {
       return card.value === value - 11;
     }
-    if (forceSplit) {
+    if (forceSplit || [4, 20, 22].includes(value)) {
       return card.value === value / 2;
     }
 
-    // Default to split
-    if ([4, 20, 22].includes(value)) {
-      return card.value === value / 2;
+    if (!forceSplit && value <= 10) {
+      return card.value < value / 2;
     }
 
-    // Default to soft
-    if ([11, 21, 13].includes(value)) {
-      return card.value === value - 11;
+    if (!forceSoft && value > 10) {
+      return card.value > value / 2 && card.value !== 11;
     }
 
-    return value <= 10 ? card.value <= value / 2 : card.value > value / 2 && card.value !== 11;
+    return card.value;
   };
 
   const firstCardIndex = R.findIndex((card) => firstCardSearchStrategy(card), decks);
