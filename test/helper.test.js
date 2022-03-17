@@ -73,6 +73,46 @@ describe('Helper functions operate correctly', () => {
     expect(output.hands.length).toBeGreaterThan(1);
   });
 
+  it('should NOT split the cards when the player is dealt two 6s and theres no double after split', () => {
+    const playerHand = makeHand(['6S', '6H']);
+    const dealerFaceUp = makeCard('2C');
+    const decks = makeDecks();
+    const output = playHand({
+      inputHands: [playerHand],
+      dealerFaceUp: dealerFaceUp,
+      strategy: bookStrategy,
+      decks,
+      canDoubleAfterSplit: false,
+    });
+    expect(output.hands.length).toEqual(1);
+  });
+
+  it('should NOT split the cards when the player is dealt two 4s against a dealer 3', () => {
+    const playerHand = makeHand(['4S', '4H']);
+    const dealerFaceUp = makeCard('3C');
+    const decks = makeDecks();
+    const output = playHand({
+      inputHands: [playerHand],
+      dealerFaceUp: dealerFaceUp,
+      strategy: bookStrategy,
+      decks,
+    });
+    expect(output.hands.length).toEqual(1);
+  });
+
+  it('should surrender with a 16 against a dealer Ace', () => {
+    const playerHand = makeHand(['TS', '6H']);
+    const dealerFaceUp = makeCard('AC');
+    const decks = makeDecks();
+    const output = playHand({
+      inputHands: [playerHand],
+      dealerFaceUp: dealerFaceUp,
+      strategy: bookStrategy,
+      decks,
+    });
+    expect(output.hands[0].bet).toEqual(0.5);
+  });
+
   it('should double the bet when the player is dealt an 11', () => {
     const playerHand = makeHand(['8S', '3H']);
     const dealerFaceUp = makeCard('4C');

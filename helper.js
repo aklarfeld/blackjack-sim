@@ -29,7 +29,14 @@ const getCount = (card) => {
   return 0;
 };
 
-const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks, initialBet = 1 }) => {
+const playHand = ({
+  inputHands = [],
+  dealerFaceUp,
+  strategy,
+  decks,
+  initialBet = 1,
+  canDoubleAfterSplit = true,
+}) => {
   let hands = [...inputHands];
   if (hands.length) {
     for (let i = 0; i < hands.length; i += 1) {
@@ -41,15 +48,27 @@ const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks, initialBet =
     hands = [{ hands: [decks.pop(), decks.pop()], bet: initialBet }];
   }
 
+  const hasSplit = hands.length > 1;
+
   for (let i = 0; i < hands.length; i += 1) {
     const playerHand = hands[i];
-    let playerAction = strategy({ hands: playerHand.hands, dealerFaceUp });
+    let playerAction = strategy({
+      hands: playerHand.hands,
+      dealerFaceUp,
+      canDoubleAfterSplit,
+      hasSplit,
+    });
     let playerValue = Math.min(...getValue(playerHand.hands));
     while (actions.Stand !== playerAction && playerValue < 21) {
       if (playerAction === actions.Hit) {
         playerHand.hands.push(decks.pop());
         playerValue = Math.min(...getValue(playerHand.hands));
-        playerAction = strategy({ hands: playerHand.hands, dealerFaceUp });
+        playerAction = strategy({
+          hands: playerHand.hands,
+          dealerFaceUp,
+          canDoubleAfterSplit,
+          hasSplit,
+        });
       } else if (playerAction === actions.Surrender) {
         playerHand.bet *= 0.5;
         playerAction = actions.Stand;
@@ -65,6 +84,8 @@ const playHand = ({ inputHands = [], dealerFaceUp, strategy, decks, initialBet =
           dealerFaceUp,
           strategy,
           decks,
+          bet: initialBet,
+          canDoubleAfterSplit,
         });
       }
     }
