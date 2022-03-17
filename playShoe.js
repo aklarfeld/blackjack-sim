@@ -1,7 +1,13 @@
 const parser = require('simple-args-parser');
-const { makeDecks } = require('./deck');
-const { playHand, evaluateHands, debug, randomBetween, getTrueCount } = require('./helper');
-const { simpleStrategy, bookStrategy, hiLoCountingStrategy } = require('./strategies');
+const {
+  playHand,
+  evaluateHands,
+  debug,
+  randomBetween,
+  getTrueCount,
+  makeDecks,
+} = require('./helper');
+const { simpleStrategy, bookStrategy, hiLoCountingStrategy } = require('./books');
 
 const playShoe = ({
   numDecks,
