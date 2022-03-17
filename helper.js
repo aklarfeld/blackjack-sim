@@ -1,9 +1,45 @@
 const R = require('ramda');
 const { actions } = require('./actions');
+const { ranks, suites, values } = require('./deck');
 
 const randomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const getTrueCount = ({ decks, runningCount }) => (runningCount * 1.0) / (decks.length / 52.0);
+
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+const shuffleDeck = (inputArray) => {
+  const array = [...inputArray];
+  let currentIndex = array.length;
+  let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+};
+const getDeck = () => {
+  const deck = [];
+  const suiteKeys = Object.keys(suites);
+  const rankKeys = Object.keys(ranks);
+  for (let i = 0; i < suiteKeys.length; i += 1) {
+    for (let j = 0; j < rankKeys.length; j += 1) {
+      const suite = suiteKeys[i];
+      const rank = rankKeys[j];
+      deck.push({ suite, rank, name: `${ranks[rank]}${suites[suite]}`, value: values[rank] });
+    }
+  }
+  return deck;
+};
+
+const makeDecks = (numDecks = 6) =>
+  [...Array(numDecks).keys()].reduce((combined) => [...combined, ...shuffleDeck(getDeck())], []);
 
 const debug = (...params) => {
   if (process.argv.includes('--debug')) {
@@ -12,16 +48,16 @@ const debug = (...params) => {
 };
 
 const getValue = (cards) => {
-  const values = [];
+  const vals = [];
   const rawValue = cards.reduce((sum, card) => card.value + sum, 0);
   const aces = cards.filter((card) => card.rank === 'Ace');
-  values.push(rawValue - aces.length * 10);
+  vals.push(rawValue - aces.length * 10);
 
   // Only one ace is allowed to be worth 11
-  if (aces.length && values[0] + 10 <= 21) {
-    values.push(values[0] + 10);
+  if (aces.length && vals[0] + 10 <= 21) {
+    vals.push(vals[0] + 10);
   }
-  return values;
+  return vals;
 };
 
 const getCount = (card) => {
@@ -174,4 +210,5 @@ module.exports = {
   evaluateHands,
   debug,
   randomBetween,
+  makeDecks,
 };

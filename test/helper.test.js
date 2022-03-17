@@ -5,10 +5,10 @@ const {
   playHand,
   evaluateHands,
   getValue,
+  makeDecks,
 } = require('../helper');
-const { getDeck, makeDecks } = require('../deck');
 const { makeCard, makeHand } = require('./fixtures');
-const { bookStrategy } = require('../strategies');
+const { bookStrategy } = require('../books');
 
 describe('Helper functions operate correctly', () => {
   it('should generate the intended card by short name', () => {
@@ -19,7 +19,7 @@ describe('Helper functions operate correctly', () => {
   });
 
   it('should generate a deck correctly', () => {
-    const deck = getDeck();
+    const deck = makeDecks(1);
     expect(deck.length).toEqual(52);
   });
 
@@ -141,4 +141,6 @@ describe('Helper functions operate correctly', () => {
       expect(getValue([card])).toEqual(expect.arrayContaining([value]));
     });
   });
+
+  it('should work', () => expect(true).toEqual(true));
 });

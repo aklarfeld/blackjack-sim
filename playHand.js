@@ -1,5 +1,5 @@
 const parser = require('simple-args-parser');
-const { makeDecks } = require('./deck');
+const { makeDecks } = require('./helper');
 const {
   getPlayerCardsByValue,
   getDealerCardByValue,
@@ -7,8 +7,7 @@ const {
   evaluateHands,
   debug,
 } = require('./helper');
-const { simpleStrategy, bookStrategy } = require('./strategies');
-const { hardLookup, softLookup, splitLookup } = require('./books/v1');
+const { simpleStrategy, bookStrategy, hardLookup, softLookup, splitLookup } = require('./books');
 
 const playSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => {
   const inputDecks = makeDecks();

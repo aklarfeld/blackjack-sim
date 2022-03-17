@@ -2,7 +2,7 @@
   "scripts": {
     "hand": "node playHand.js",
     "shoe": "node playShoe.js",
-    "test": "cross-env CI=true jest --ci",
+    "test": "cross-env CI=true jest --ci --no-cache",
     "lint": "eslint ."
   },
   "husky": {
@@ -22,7 +22,7 @@
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-node": "^11.1.0",
