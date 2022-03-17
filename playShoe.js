@@ -1,9 +1,15 @@
 const parser = require('simple-args-parser');
 const { makeDecks } = require('./deck');
-const { playHand, evaluateHands, debug, randomBetween } = require('./helper');
+const { playHand, evaluateHands, debug, randomBetween, getTrueCount } = require('./helper');
 const { simpleStrategy, bookStrategy, hiLoCountingStrategy } = require('./strategies');
 
-const playShoe = ({ numDecks, playerStrategy, dealerStrategy, countingStrategy }) => {
+const playShoe = ({
+  numDecks,
+  playerStrategy,
+  dealerStrategy,
+  countingStrategy,
+  isCardCountingActive = true,
+}) => {
   debug('*** START SHOE ***');
   const decks = makeDecks(numDecks);
   const cutIndex = randomBetween(decks.length / 2, (decks.length * 3) / 4);
@@ -12,7 +18,13 @@ const playShoe = ({ numDecks, playerStrategy, dealerStrategy, countingStrategy }
   let runningCount = 0;
   while (decks.length >= cutIndex) {
     const dealerFaceUp = decks.pop();
-    const { hands: playerHands } = playHand({ strategy: playerStrategy, dealerFaceUp, decks });
+    const { hands: playerHands } = playHand({
+      strategy: playerStrategy,
+      dealerFaceUp,
+      decks,
+      trueCount: getTrueCount({ runningCount, decks }),
+      isCardCountingActive,
+    });
     const { hands: dealerHands } = playHand({
       hands: [{ hands: [dealerFaceUp], bet: 1 }],
       strategy: dealerStrategy,

@@ -1,10 +1,23 @@
-const { hardLookup, softLookup, splitLookup } = require('./v1');
+const { hardLookup, softLookup, splitLookup, countLookup } = require('./v1');
 const { getValue } = require('../helper');
 const { actions } = require('../actions');
 
-const bookStrategy = ({ hands, dealerFaceUp, hasSplit, canDoubleAfterSplit = true }) => {
+const bookStrategy = ({
+  hands,
+  dealerFaceUp,
+  hasSplit,
+  trueCount,
+  canDoubleAfterSplit = true,
+  isCardCountingActive = true,
+}) => {
   const playerValue = Math.max(...getValue(hands));
-  let playerAction;
+  let playerAction = countLookup({ hands, playerValue, dealerFaceUp, trueCount });
+
+  // If there's a better move with a count, do it.
+  if (playerAction && isCardCountingActive) {
+    return playerAction;
+  }
+
   if (hands.every((card) => card.value === hands[0].value)) {
     playerAction = splitLookup[dealerFaceUp.value][playerValue];
 
