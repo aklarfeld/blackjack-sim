@@ -9,13 +9,7 @@ const {
 } = require('./helper');
 const { simpleStrategy, bookStrategy, hiLoCountingStrategy } = require('./books');
 
-const playShoe = ({
-  numDecks,
-  playerStrategy,
-  dealerStrategy,
-  countingStrategy,
-  isCardCountingActive = true,
-}) => {
+const playShoe = ({ numDecks, playerStrategy, dealerStrategy, countingStrategy }) => {
   debug('*** START SHOE ***');
   const decks = makeDecks(numDecks);
   const cutIndex = randomBetween(decks.length / 2, (decks.length * 3) / 4);
