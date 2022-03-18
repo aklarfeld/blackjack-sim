@@ -33,6 +33,7 @@ const playSingleHand = ({ dealerValue, playerValue, forceSoft, forceSplit }) => 
     decks: inputDecks,
     strategy: simpleStrategy,
   });
+
   let win = 0;
   for (let i = 0; i < playerHands.length; i += 1) {
     win += evaluateHands({ playerHand: playerHands[i], dealerHand: dealerHands[0] });

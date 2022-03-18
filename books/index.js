@@ -25,6 +25,7 @@ const bookStrategy = ({
     return playerAction;
   }
 
+  // Split lookups
   if (hands.length === 2 && hands.every((card) => card.value === hands[0].value)) {
     playerAction = splitLookup[dealerFaceUp.value][playerValue];
 
@@ -39,7 +40,7 @@ const bookStrategy = ({
 
   if (hands.length === 2 && hands.some((card) => card.rank === 'Ace')) {
     // Implement logic here to block doubles after splits, if needed
-    playerAction = softLookup[dealerFaceUp.value][playerValue];
+    playerAction = softLookup[dealerFaceUp.value][playerValue] || actions.Stand;
     if (playerAction === actions.Double && !canDoubleAfterSplit && hasSplit) {
       return actions.Hit;
     }
@@ -48,13 +49,17 @@ const bookStrategy = ({
 
   // Means that it's soft, but there's more than 2 cards
   if (hands.length > 2 && getValue(hands).length > 1) {
-    const thirdCardAction = softLookup[dealerFaceUp.value][playerValue];
-    playerAction = thirdCardAction === actions.Double ? actions.Hit : thirdCardAction;
-  } else {
-    playerAction = hardLookup[dealerFaceUp.value][playerValue];
+    const thirdCardAction = softLookup[dealerFaceUp.value][playerValue] || actions.Stand;
+    return thirdCardAction === actions.Double ? actions.Hit : thirdCardAction;
   }
 
-  return playerAction || actions.Stand;
+  playerAction = hardLookup[dealerFaceUp.value][playerValue] || actions.Stand;
+
+  if (hands.length > 2 && playerAction === actions.Surrender) {
+    return actions.Hit;
+  }
+
+  return playerAction;
 };
 
 const hiLoCountingStrategy = ({ card }) => {

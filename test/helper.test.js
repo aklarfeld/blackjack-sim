@@ -145,5 +145,16 @@ describe('Helper functions operate correctly', () => {
     });
   });
 
-  it('should work', () => expect(true).toEqual(true));
+  it('should return an action for this hand combination', () => {
+    const playerHand = makeHand(['2H', 'AC', '8D']);
+    const dealerFaceUp = makeCard('4D');
+    const decks = [...makeDecks()];
+    const output = playHand({
+      inputHands: [playerHand],
+      dealerFaceUp: dealerFaceUp,
+      strategy: bookStrategy,
+      decks,
+    });
+    console.log({ output });
+  });
 });
