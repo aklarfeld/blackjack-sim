@@ -158,4 +158,18 @@ describe('Helper functions operate correctly', () => {
     // Just don't hang...
     expect(output).toBeTruthy();
   });
+
+  it('should stay on a soft 18 vs an Ace', () => {
+    const playerHand = makeHand(['4S', 'AH', '3C']);
+    const dealerFaceUp = makeCard('AS');
+    const decks = [...makeDecks()];
+    const output = playHand({
+      inputHands: [playerHand],
+      dealerFaceUp: dealerFaceUp,
+      strategy: bookStrategy,
+      decks,
+    });
+    // Just don't hang...
+    expect(output).toBeTruthy();
+  });
 });

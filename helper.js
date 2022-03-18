@@ -131,6 +131,11 @@ const playHand = ({
 const evaluateHands = ({ playerHand, dealerHand }) => {
   const playerValue = Math.max(...getValue(playerHand.hands));
   const dealerValue = Math.max(...getValue(dealerHand.hands));
+  // If the dealer has blackjack you instantly lose
+  if (dealerValue === 21 && dealerHand.hands.length === 2) {
+    return -999;
+    // return -playerHand.bet;
+  }
   if (playerHand.bet === 0.5) return -playerHand.bet; // Need to figure out a better way to detect surrenders
   if (playerValue > 21) return -playerHand.bet;
   if (dealerValue > playerValue && dealerValue <= 21) return -playerHand.bet;
