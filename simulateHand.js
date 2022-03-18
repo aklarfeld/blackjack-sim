@@ -56,6 +56,7 @@ const monteCarloSingleHand = ({
 }) => {
   let wins = 0;
   let losses = 0;
+  let dealerBlackjack = 0;
   for (let i = 0; i < simulateAmount; i += 1) {
     const outcome = playSingleHand({
       dealerValue,
@@ -63,7 +64,9 @@ const monteCarloSingleHand = ({
       forceSoft,
       forceSplit,
     });
-    if (outcome < 0) {
+    if (outcome <= -999) {
+      dealerBlackjack += 1;
+    } else if (outcome < 0) {
       losses += 1;
     } else if (outcome > 0) {
       wins += 1;
@@ -82,19 +85,21 @@ const monteCarloSingleHand = ({
   console.log({
     wins,
     losses,
+    dealerBlackjack,
     simulateAmount,
     dealerValue,
     playerValue,
     forceSoft,
     forceSplit,
-    ev: (wins + -1 * losses) / simulateAmount,
+    evNoDealerBJ: (wins + -1 * losses) / (simulateAmount - dealerBlackjack),
+    evDealerBJ: (wins + -1 * (losses + dealerBlackjack)) / simulateAmount,
     bookAction,
   });
 };
 
 (function () {
   const args = parser.parse(process.argv, {
-    long: ['simulateAmount:', 'dealerValue:', 'playerValue:', 'forceSoft', 'forceSplit'],
+    long: ['simulateAmount:', 'dealerValue:', 'playerValue:', 'forceSoft', 'forceSplit', 'debug'],
     short: [],
     stupid: [],
   });
@@ -107,8 +112,10 @@ const monteCarloSingleHand = ({
     throw new Error('Player value must be between 4 and 21');
   }
 
+  const simulateAmount = args.debug ? 1 : parseInt(args.simulateAmount, 10) || 1000;
+
   monteCarloSingleHand({
-    simulateAmount: parseInt(args.simulateAmount, 10) || 1000,
+    simulateAmount,
     dealerValue: parseInt(args.dealerValue, 10),
     playerValue: parseInt(args.playerValue, 10),
     forceSoft: args.forceSoft,
