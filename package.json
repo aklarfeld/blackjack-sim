@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "hand": "node playHand.js",
-    "shoe": "node playShoe.js",
+    "hand": "node simulateHand.js",
+    "shoe": "node simulateShoe.js",
     "test": "cross-env CI=true jest --ci --no-cache",
     "lint": "eslint ."
   },

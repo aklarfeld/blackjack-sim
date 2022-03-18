@@ -1,14 +1,21 @@
+const parser = require('simple-args-parser');
 const { hardLookup, softLookup, splitLookup, countLookup } = require('./v1');
 const { getValue } = require('../helper');
 const { actions } = require('../actions');
+
+const args = parser.parse(process.argv, {
+  long: ['doubleAfterSplit', 'countCards'],
+  short: [],
+  stupid: [],
+});
 
 const bookStrategy = ({
   hands,
   dealerFaceUp,
   hasSplit,
   trueCount,
-  canDoubleAfterSplit = true,
-  isCardCountingActive = true,
+  canDoubleAfterSplit = args.doubleAfterSplit,
+  isCardCountingActive = args.countCards,
 }) => {
   const playerValue = Math.max(...getValue(hands));
   let playerAction = countLookup({ hands, playerValue, dealerFaceUp, trueCount });
@@ -18,7 +25,8 @@ const bookStrategy = ({
     return playerAction;
   }
 
-  if (hands.every((card) => card.value === hands[0].value)) {
+  // Split lookups
+  if (hands.length === 2 && hands.every((card) => card.value === hands[0].value)) {
     playerAction = splitLookup[dealerFaceUp.value][playerValue];
 
     if (playerAction === actions.DoubleAfterSplit && canDoubleAfterSplit) {
@@ -32,7 +40,7 @@ const bookStrategy = ({
 
   if (hands.length === 2 && hands.some((card) => card.rank === 'Ace')) {
     // Implement logic here to block doubles after splits, if needed
-    playerAction = softLookup[dealerFaceUp.value][playerValue];
+    playerAction = softLookup[dealerFaceUp.value][playerValue] || actions.Stand;
     if (playerAction === actions.Double && !canDoubleAfterSplit && hasSplit) {
       return actions.Hit;
     }
@@ -41,13 +49,17 @@ const bookStrategy = ({
 
   // Means that it's soft, but there's more than 2 cards
   if (hands.length > 2 && getValue(hands).length > 1) {
-    const thirdCardAction = softLookup[dealerFaceUp.value][playerValue];
-    playerAction = thirdCardAction === actions.Double ? actions.Hit : thirdCardAction;
-  } else {
-    playerAction = hardLookup[dealerFaceUp.value][playerValue];
+    const thirdCardAction = softLookup[dealerFaceUp.value][playerValue] || actions.Stand;
+    return thirdCardAction === actions.Double ? actions.Hit : thirdCardAction;
   }
 
-  return playerAction || actions.Stand;
+  playerAction = hardLookup[dealerFaceUp.value][playerValue] || actions.Stand;
+
+  if (hands.length > 2 && playerAction === actions.Surrender) {
+    return actions.Hit;
+  }
+
+  return playerAction;
 };
 
 const hiLoCountingStrategy = ({ card }) => {
