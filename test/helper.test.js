@@ -155,6 +155,7 @@ describe('Helper functions operate correctly', () => {
       strategy: bookStrategy,
       decks,
     });
-    console.log({ output });
+    // Just don't hang...
+    expect(output).toBeTruthy();
   });
 });
